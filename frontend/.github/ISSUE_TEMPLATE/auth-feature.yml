@@ -1,0 +1,111 @@
+name: "Feature: Authentication & Authorization"
+description: "Implement authentication and authorization for students, teachers, and admins"
+title: "[Auth] "
+labels: ["feature", "authentication", "backend", "frontend"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📄 Feature Design Doc – Authentication & Authorization
+        Use this template to track the implementation of the auth feature.
+
+  - type: textarea
+    id: overview
+    attributes:
+      label: 1. Overview
+      description: Summarize the feature.  
+      placeholder: "Implement secure auth with teacher-first registration, unique School Join ID for students, role-based access."
+    validations:
+      required: true
+
+  - type: textarea
+    id: goals
+    attributes:
+      label: 2. Goals
+      description: What success looks like.
+      placeholder: |
+        - Teachers register schools, system generates join code
+        - Students register with join code
+        - Admins manage schools
+        - JWT/NextAuth session management
+        - Role-based route protection
+    validations:
+      required: true
+
+  - type: textarea
+    id: non-goals
+    attributes:
+      label: 3. Non-Goals
+      description: What is explicitly out of scope.
+      placeholder: |
+        - No SMS password reset
+        - No 2FA in MVP
+        - No extra social logins beyond Google/Microsoft
+
+  - type: textarea
+    id: user-stories
+    attributes:
+      label: 4. User Stories / Flows
+      description: Define stories for teacher, student, admin.
+      placeholder: |
+        **Teacher**: Register school, receive join code, manage students  
+        **Student**: Register with join code, access tournaments  
+        **Admin**: Manage schools, oversee accounts  
+
+  - type: textarea
+    id: architecture
+    attributes:
+      label: 5. Architecture & Design
+      description: Data models, endpoints, and components.
+      placeholder: |
+        **Models**: User, School (with join_code)  
+        **API**:  
+          - POST /auth/register/teacher  
+          - POST /auth/register/student  
+          - POST /auth/login  
+          - GET /auth/me  
+        **Frontend**: TeacherRegisterForm, StudentRegisterForm, LoginForm, AuthGuard
+
+  - type: textarea
+    id: testing
+    attributes:
+      label: 6. Testing Strategy
+      description: Unit, integration, and E2E tests.
+      placeholder: |
+        - Unit: password hashing, join code validation  
+        - Integration: teacher register → school + join code  
+        - E2E: student register with join code → student dashboard  
+
+  - type: textarea
+    id: deployment
+    attributes:
+      label: 7. Deployment & Rollout
+      description: How to deploy safely.
+      placeholder: |
+        - Deploy backend + frontend to staging  
+        - Run CI/CD tests  
+        - Manual testing in staging  
+        - Release to prod  
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: 8. Risks & Mitigations
+      description: Possible risks and solutions.
+      placeholder: |
+        - Join code leaks → regenerate option  
+        - Brute force → rate limiting  
+        - Password leaks → bcrypt  
+        - Unauthorized access → RBAC middleware  
+
+  - type: textarea
+    id: open-questions
+    attributes:
+      label: 9. Open Questions
+      description: Track any unresolved decisions.
+      placeholder: |
+        - Should join codes expire?  
+        - Should teachers approve students manually?  
+        - Should admins see all join codes?

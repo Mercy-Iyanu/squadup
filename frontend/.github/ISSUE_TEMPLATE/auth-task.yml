@@ -1,0 +1,59 @@
+name: "Task: Auth Feature Implementation"
+description: "Break down the authentication feature into actionable tasks"
+title: "[Auth][Task] "
+labels: ["task", "authentication"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🔨 Task Breakdown for Authentication
+        Use this template to create focused tasks derived from the Auth feature design doc.
+
+  - type: input
+    id: scope
+    attributes:
+      label: Scope / Area
+      description: Which part of the system does this task belong to?
+      placeholder: "API / Frontend / Testing / Deployment"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Task Description
+      description: What specifically needs to be built?
+      placeholder: "E.g., Implement `POST /auth/register/teacher` endpoint"
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Subtasks
+      description: Track completion of related work.
+      options:
+        - label: Backend implementation
+        - label: Frontend UI/UX
+        - label: Unit tests
+        - label: Integration tests
+        - label: E2E tests
+        - label: Documentation update
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: ✅ Acceptance Criteria
+      description: Define what success looks like.
+      placeholder: |
+        - Endpoint returns correct response
+        - Validation errors handled
+        - UI matches design
+        - Tests pass in CI/CD
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / Dependencies
+      description: Add links to PRs, design doc sections, or blockers.
+      placeholder: "Depends on: #123 (School model migration)"
