@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 type LoginFormData = {
   email: string;
@@ -10,6 +11,7 @@ type LoginFormData = {
 };
 
 export default function LoginForm() {
+  const { login } = useAuth();
   const {
     register,
     handleSubmit,
@@ -33,13 +35,9 @@ export default function LoginForm() {
       const result = await res.json();
 
       if (res.ok) {
-        // Save token + user to localStorage for now
-        localStorage.setItem("token", result.token);
-        localStorage.setItem("user", JSON.stringify(result.user));
-
+        login(result.user, result.token);
         setMessage("Login successful! Redirecting...");
 
-        // 🚀 You can replace with Next.js router push
         setTimeout(() => {
           if (result.user.role === "teacher") {
             window.location.href = "/teacher/dashboard";
