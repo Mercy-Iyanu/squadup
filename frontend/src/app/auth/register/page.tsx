@@ -66,7 +66,6 @@ export default function RegisterForm() {
     <div className="max-w-md mx-auto p-6 bg-blue-400 rounded shadow">
       <h2 className="text-xl font-bold mb-4">Register</h2>
 
-      {/* Toggle */}
       <div className="flex mb-4">
         <button
           type="button"

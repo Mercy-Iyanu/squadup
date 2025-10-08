@@ -39,11 +39,7 @@ export default function LoginForm() {
         setMessage("Login successful! Redirecting...");
 
         setTimeout(() => {
-          if (result.user.role === "teacher") {
-            window.location.href = "/teacher/dashboard";
-          } else {
-            window.location.href = "/student/dashboard";
-          }
+          window.location.href = "/dashboard";
         }, 1500);
       } else {
         setMessage(result.message || "Login failed");
