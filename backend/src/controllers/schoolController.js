@@ -56,7 +56,7 @@ const getPendingStudents = async (req, res) => {
       school: school._id,
       role: "student",
       approved: false,
-    }).select("id name email createdAt");
+    }).select("_id name email createdAt");
 
     res.status(200).json({ pendingStudents });
   } catch (err) {
@@ -131,7 +131,7 @@ const getStudentsHistory = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const students = await User.find(query)
-      .select("id name email createdAt status")
+      .select("_id name email createdAt status")
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 });
