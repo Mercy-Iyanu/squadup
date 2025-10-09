@@ -2,15 +2,16 @@ import axios from "axios";
 
 const BASE_URL = `${process.env.NEXT_PUBLIC_API_URL}/school`;
 
-export const getAllStudents = (token: string) =>
-  axios.get(BASE_URL, {
+export const getAllStudents = (token: string, filters?: any) => {
+  const params = new URLSearchParams(filters).toString();
+  return axios.get(`${BASE_URL}?${params}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
-
+};
 export const updateStudentStatus = (
   id: string,
   status: "approved" | "rejected",
-  
+
   token: string
 ) =>
   axios.put(

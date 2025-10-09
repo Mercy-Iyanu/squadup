@@ -5,15 +5,46 @@ const getAllStudents = async (req, res) => {
   try {
     const teacherId = req.user.id;
     const school = await School.findOne({ admin: teacherId });
-    if (!school) return res.status(403).json({ message: "Not authorized" });
 
-    const students = await User.find({
-      school: school._id,
-      role: "student",
-    }).select("_id name email createdAt status");
+    if (!school) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
 
-    res.json({ students });
+    const { status, page = 1, limit = 10, search } = req.query;
+    const query = { school: school._id, role: "student" };
+
+    if (status && ["pending", "approved", "rejected"].includes(status)) {
+      query.status = status;
+    }
+
+    if (search) {
+      query.$or = [
+        { name: new RegExp(search, "i") },
+        { email: new RegExp(search, "i") },
+      ];
+    }
+
+    const skip = (page - 1) * limit;
+    const [students, total] = await Promise.all([
+      User.find(query)
+        .select("_id name email createdAt status")
+        .skip(skip)
+        .limit(parseInt(limit))
+        .sort({ createdAt: -1 }),
+      User.countDocuments(query),
+    ]);
+
+    res.json({
+      students,
+      pagination: {
+        total,
+        page: parseInt(page),
+        pages: Math.ceil(total / limit),
+        limit: parseInt(limit),
+      },
+    });
   } catch (err) {
+    console.error("Error fetching students:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -21,27 +52,38 @@ const getAllStudents = async (req, res) => {
 const updateStudentStatus = async (req, res) => {
   try {
     const { studentId } = req.params;
-    const { status } = req.body; // "approved" or "rejected"
+    const { status } = req.body;
     const teacherId = req.user.id;
+
+    if (!["approved", "rejected"].includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
 
     const school = await School.findOne({ admin: teacherId });
     if (!school) return res.status(403).json({ message: "Not authorized" });
 
     const student = await User.findById(studentId);
-    if (!student || student.role !== "student")
+    if (!student || student.role !== "student") {
       return res.status(404).json({ message: "Student not found" });
+    }
 
-    if (student.school.toString() !== school._id.toString())
-      return res
-        .status(403)
-        .json({ message: "This student is not in your school" });
+    if (student.school.toString() !== school._id.toString()) {
+      return res.status(403).json({ message: "Student not in your school" });
+    }
 
     student.status = status;
     await student.save();
 
-    res.json({ message: `Student ${status} successfully`, student });
+    res.json({
+      message: `Student ${status} successfully`,
+      student: {
+        id: student._id,
+        email: student.email,
+        status: student.status,
+      },
+    });
   } catch (err) {
-    console.error(err);
+    console.error("Error updating student status:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
