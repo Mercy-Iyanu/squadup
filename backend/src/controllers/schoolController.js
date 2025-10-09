@@ -1,6 +1,51 @@
 const User = require("../models/User");
 const School = require("../models/School");
 
+const getAllStudents = async (req, res) => {
+  try {
+    const teacherId = req.user.id;
+    const school = await School.findOne({ admin: teacherId });
+    if (!school) return res.status(403).json({ message: "Not authorized" });
+
+    const students = await User.find({
+      school: school._id,
+      role: "student",
+    }).select("_id name email createdAt status");
+
+    res.json({ students });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+const updateStudentStatus = async (req, res) => {
+  try {
+    const { studentId } = req.params;
+    const { status } = req.body; // "approved" or "rejected"
+    const teacherId = req.user.id;
+
+    const school = await School.findOne({ admin: teacherId });
+    if (!school) return res.status(403).json({ message: "Not authorized" });
+
+    const student = await User.findById(studentId);
+    if (!student || student.role !== "student")
+      return res.status(404).json({ message: "Student not found" });
+
+    if (student.school.toString() !== school._id.toString())
+      return res
+        .status(403)
+        .json({ message: "This student is not in your school" });
+
+    student.status = status;
+    await student.save();
+
+    res.json({ message: `Student ${status} successfully`, student });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 const approveStudent = async (req, res) => {
   try {
     const { studentId } = req.params;
@@ -158,4 +203,6 @@ module.exports = {
   getPendingStudents,
   rejectStudent,
   getStudentsHistory,
+  getAllStudents,
+  updateStudentStatus,
 };

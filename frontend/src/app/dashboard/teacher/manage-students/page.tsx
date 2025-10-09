@@ -32,23 +32,25 @@ export default function ManageStudentsPage() {
     fetchStudents();
   }, []);
 
-  const handleApprove = async (id: string) => {
+  const handleChangeStatus = async (
+    id: string,
+    status: "approved" | "rejected"
+  ) => {
     try {
-      await approveStudent(id, token!);
-      toast.success("Student approved");
-      setStudents((prev) => prev.filter((s) => s._id !== id));
-    } catch (err) {
-      toast.error("Error approving student");
-    }
-  };
+      if (status === "approved") {
+        await approveStudent(id, token!);
+        toast.success("Student approved");
+      } else {
+        await rejectStudent(id, token!);
+        toast.error("Student rejected");
+      }
 
-  const handleReject = async (id: string) => {
-    try {
-      await rejectStudent(id, token!);
-      toast.success("Student rejected");
-      setStudents((prev) => prev.filter((s) => s._id !== id));
+      // Update UI instantly
+      setStudents((prev) =>
+        prev.map((s) => (s._id === id ? { ...s, status } : s))
+      );
     } catch (err) {
-      toast.error("Error rejecting student");
+      toast.error(`Error updating student status`);
     }
   };
 
@@ -63,8 +65,7 @@ export default function ManageStudentsPage() {
         ) : (
           <StudentTable
             students={students}
-            onApprove={handleApprove}
-            onReject={handleReject}
+            onChangeStatus={handleChangeStatus}
           />
         )}
       </div>
