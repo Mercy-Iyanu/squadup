@@ -156,7 +156,7 @@ export default function RegisterForm() {
           {loading ? "Registering..." : "Register"}
         </button>
         <span>
-          Already have an account? <Link href="/login">Login</Link>
+          Already have an account? <Link href="/auth/login">Login</Link>
         </span>
       </form>
 
