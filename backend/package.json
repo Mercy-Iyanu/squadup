@@ -4,7 +4,8 @@
   "main": "server.js",
   "scripts": {
     "test": "jest --runInBand",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js"
   },
   "keywords": [],
   "author": "Mercy Oyelude",
