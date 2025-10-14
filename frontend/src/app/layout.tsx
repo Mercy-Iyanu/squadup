@@ -1,18 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { Toast, Toaster } from "react-hot-toast";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "SquadUp Esports Platform",
@@ -27,8 +19,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.className} min-h-screen text-white relative overflow-hidden bg-[#001233]`}
       >
+        <div className="absolute inset-0 bg-gradient-to-br from-[#001f4d] to-[#000814] opacity-95 -z-10" />
+
+        <div className="absolute -top-32 -left-32 w-[400px] h-[400px] bg-blue-700/30 blur-[160px] rounded-full -z-10" />
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-yellow-500/20 blur-[160px] rounded-full -z-10" />
+
         <AuthProvider>{children}</AuthProvider>
         <Toaster
           position="top-right"
