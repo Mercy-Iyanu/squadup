@@ -52,7 +52,7 @@ export default function TopNav() {
             <>
               <div className="flex items-center gap-2">
                 <Image
-                  src={user.avatar || "/default-avatar.png"}
+                  src={user.avatar || "/default-avatar.jpg"}
                   alt="User Avatar"
                   width={35}
                   height={35}
