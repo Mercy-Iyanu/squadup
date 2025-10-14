@@ -1,14 +1,13 @@
 const User = require("../models/User");
 const School = require("../models/School");
 
+// ✅ Get all students (with optional status/search)
 const getAllStudents = async (req, res) => {
   try {
     const teacherId = req.user.id;
     const school = await School.findOne({ admin: teacherId });
 
-    if (!school) {
-      return res.status(403).json({ message: "Not authorized" });
-    }
+    if (!school) return res.status(403).json({ message: "Not authorized" });
 
     const { status, page = 1, limit = 10, search } = req.query;
     const query = { school: school._id, role: "student" };
@@ -25,6 +24,7 @@ const getAllStudents = async (req, res) => {
     }
 
     const skip = (page - 1) * limit;
+
     const [students, total] = await Promise.all([
       User.find(query)
         .select("_id name email createdAt status")
@@ -49,6 +49,7 @@ const getAllStudents = async (req, res) => {
   }
 };
 
+// ✅ Update student status (generalized endpoint)
 const updateStudentStatus = async (req, res) => {
   try {
     const { studentId } = req.params;
@@ -88,30 +89,28 @@ const updateStudentStatus = async (req, res) => {
   }
 };
 
+// ✅ Approve student (wrapper for update)
 const approveStudent = async (req, res) => {
   try {
     const { studentId } = req.params;
     const teacherId = req.user.id;
 
     const school = await School.findOne({ admin: teacherId });
-    if (!school) {
+    if (!school)
       return res
         .status(403)
         .json({ message: "Not authorized to approve students" });
-    }
 
     const student = await User.findById(studentId);
-    if (!student || student.role !== "student") {
+    if (!student || student.role !== "student")
       return res.status(404).json({ message: "Student not found" });
-    }
 
-    if (student.school.toString() !== school._id.toString()) {
+    if (student.school.toString() !== school._id.toString())
       return res
         .status(403)
         .json({ message: "This student is not in your school" });
-    }
 
-    student.approved = true;
+    student.status = "approved"; // ✅ use status, not approved
     await student.save();
 
     res.status(200).json({
@@ -119,7 +118,7 @@ const approveStudent = async (req, res) => {
       student: {
         id: student._id,
         email: student.email,
-        approved: student.approved,
+        status: student.status,
       },
     });
   } catch (err) {
@@ -128,22 +127,22 @@ const approveStudent = async (req, res) => {
   }
 };
 
+// ✅ Get pending students (status-based)
 const getPendingStudents = async (req, res) => {
   try {
     const teacherId = req.user.id;
 
     const school = await School.findOne({ admin: teacherId });
-    if (!school) {
+    if (!school)
       return res
         .status(403)
         .json({ message: "Not authorized to view students" });
-    }
 
     const pendingStudents = await User.find({
       school: school._id,
       role: "student",
-      approved: false,
-    }).select("_id name email createdAt");
+      status: "pending", // ✅ fix here
+    }).select("_id name email createdAt status");
 
     res.status(200).json({ pendingStudents });
   } catch (err) {
@@ -152,28 +151,26 @@ const getPendingStudents = async (req, res) => {
   }
 };
 
+// ✅ Reject student
 const rejectStudent = async (req, res) => {
   try {
     const { studentId } = req.params;
     const teacherId = req.user.id;
 
     const school = await School.findOne({ admin: teacherId });
-    if (!school) {
+    if (!school)
       return res
         .status(403)
         .json({ message: "Not authorized to reject students" });
-    }
 
     const student = await User.findById(studentId);
-    if (!student || student.role !== "student") {
+    if (!student || student.role !== "student")
       return res.status(404).json({ message: "Student not found" });
-    }
 
-    if (student.school.toString() !== school._id.toString()) {
+    if (student.school.toString() !== school._id.toString())
       return res
         .status(403)
         .json({ message: "This student is not in your school" });
-    }
 
     student.status = "rejected";
     await student.save();
@@ -192,24 +189,23 @@ const rejectStudent = async (req, res) => {
   }
 };
 
+// ✅ Get student history (status-based)
 const getStudentsHistory = async (req, res) => {
   try {
     const teacherId = req.user.id;
 
     const school = await School.findOne({ admin: teacherId });
-    if (!school) {
+    if (!school)
       return res
         .status(403)
         .json({ message: "Not authorized to view students" });
-    }
 
     const query = { school: school._id, role: "student" };
 
     if (req.query.status) {
       const allowedStatuses = ["pending", "approved", "rejected"];
-      if (!allowedStatuses.includes(req.query.status)) {
+      if (!allowedStatuses.includes(req.query.status))
         return res.status(400).json({ message: "Invalid status filter" });
-      }
       query.status = req.query.status;
     }
 

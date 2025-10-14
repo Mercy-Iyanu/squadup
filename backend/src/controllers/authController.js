@@ -85,7 +85,7 @@ const registerStudent = async (req, res) => {
       email,
       passwordHash,
       role: "student",
-      approved: false,
+      status: "pending",
       school: school._id,
     });
 
@@ -123,7 +123,7 @@ const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    if (user.role === "student" && !user.approved) {
+    if (user.role === "student" && user.status !== "approved") {
       return res
         .status(403)
         .json({ message: "Account pending approval by school admin" });
