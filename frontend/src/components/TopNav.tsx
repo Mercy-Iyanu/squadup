@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
 import logo from "../assets/logo.png";
+import defaultAvatar from "../assets/default-avatar.jpg";
 
 export default function TopNav() {
   const router = useRouter();
@@ -52,7 +53,7 @@ export default function TopNav() {
             <>
               <div className="flex items-center gap-2">
                 <Image
-                  src={user.avatar || "/default-avatar.jpg"}
+                  src={user.avatar || defaultAvatar}
                   alt="User Avatar"
                   width={35}
                   height={35}
