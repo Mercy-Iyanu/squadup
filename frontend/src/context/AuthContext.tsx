@@ -12,6 +12,8 @@ type User = {
   id: string;
   email: string;
   role: "teacher" | "student";
+  name?: string;
+  avatar?: string;
 };
 
 type AuthContextType = {
