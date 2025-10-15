@@ -21,6 +21,7 @@ Built with **Next.js** (frontend) and **Node.js/Express** (backend).
 ---
 
 ## 📂 Project Structure
+
 SQUADUP/
 │── backend/ # Node.js + Express API
 │── frontend/ # Next.js frontend
