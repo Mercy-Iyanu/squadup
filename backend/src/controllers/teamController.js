@@ -55,6 +55,23 @@ const getTeams = async (req, res) => {
   }
 };
 
+const getTeamById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const team = await Team.findById(id)
+      .populate("members", "name email")
+      .populate("captain", "name email")
+      .populate("school", "name");
+
+    if (!team) return res.status(404).json({ message: "Team not found" });
+
+    res.json(team);
+  } catch (error) {
+    console.error("Error fetching team:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 const joinTeam = async (req, res) => {
   try {
     const { id } = req.params;
@@ -120,6 +137,7 @@ const deleteTeam = async (req, res) => {
 module.exports = {
   createTeam,
   getTeams,
+  getTeamById,
   joinTeam,
   approveTeam,
   deleteTeam,

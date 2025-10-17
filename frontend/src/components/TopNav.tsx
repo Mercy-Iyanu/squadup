@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Menu, X } from "lucide-react";
 import logo from "../assets/logo.png";
 import defaultAvatar from "../assets/default-avatar.jpg";
@@ -15,12 +15,27 @@ export default function TopNav() {
   const { user, logout } = useAuth() || {};
   const [isOpen, setIsOpen] = useState(false);
 
-  const navLinks = [
-    { href: "/dashboard", label: "Dashboard" },
-    { href: "/teams", label: "Teams" },
-    { href: "/matches", label: "Matches" },
-    { href: "/leaderboard", label: "Leaderboard" },
-  ];
+  // 👇 Build nav links based on user role
+  const navLinks = useMemo(() => {
+    if (!user) return [];
+
+    if (user.role === "teacher") {
+      return [
+        { href: "/dashboard", label: "Dashboard" },
+        { href: "/dashboard/teacher/teams", label: "Teams" },
+        { href: "/teacher/manage-students", label: "Students" },
+        { href: "/matches", label: "Matches" },
+        { href: "/leaderboard", label: "Leaderboard" },
+      ];
+    }
+
+    return [
+      { href: "/dashboard", label: "Dashboard" },
+      { href: "/dashboard/student/teams", label: "Teams" },
+      { href: "/matches", label: "Matches" },
+      { href: "/leaderboard", label: "Leaderboard" },
+    ];
+  }, [user]);
 
   return (
     <motion.nav
