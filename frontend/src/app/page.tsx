@@ -14,7 +14,7 @@ export default function SplashPage() {
       <div className="absolute -top-20 -left-20 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-blue-700/40 blur-[120px] md:blur-[180px] rounded-full" />
       <div className="absolute bottom-0 right-0 w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-yellow-500/30 blur-[120px] md:blur-[180px] rounded-full" />
 
-      <div className="relative z-10 flex flex-col-reverse md:flex-row items-center justify-center gap-10 md:gap-20 px-6 sm:px-8 md:px-20 py-12">
+      <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-10 md:gap-20 px-6 sm:px-8 md:px-20 py-12">
         <motion.div
           initial={{ y: 40, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
