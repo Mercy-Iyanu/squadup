@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = `${process.env.NEXT_PUBLIC_API_URL}/team`;
+const BASE_URL = `${process.env.NEXT_PUBLIC_API_URL}/teams`;
 
 export const getTeams = (token: string) =>
   axios.get(BASE_URL, {
