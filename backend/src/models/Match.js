@@ -22,6 +22,7 @@ const matchSchema = new mongoose.Schema({
     default: "friendly",
   },
   scheduledAt: { type: Date },
+  replayLink: { type: String },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 

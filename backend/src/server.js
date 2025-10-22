@@ -6,6 +6,7 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/auth");
 const schoolRoutes = require("./routes/school");
 const teamRoutes = require("./routes/team");
+const matchRoutes = require("./routes/match");
 
 dotenv.config();
 const app = express();
@@ -29,5 +30,6 @@ app.get("/", (req, res) => {
 app.use("/auth", authRoutes);
 app.use("/school", schoolRoutes);
 app.use("/teams", teamRoutes);
+app.use("/matches", matchRoutes);
 
 module.exports = app;
