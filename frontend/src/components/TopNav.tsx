@@ -23,8 +23,8 @@ export default function TopNav() {
       return [
         { href: "/dashboard", label: "Dashboard" },
         { href: "/dashboard/teacher/teams", label: "Teams" },
-        { href: "/teacher/manage-students", label: "Students" },
-        { href: "/matches", label: "Matches" },
+        { href: "/dashboard/teacher/manage-students", label: "Students" },
+        { href: "/dashboard/teacher/matches", label: "Matches" },
         { href: "/leaderboard", label: "Leaderboard" },
       ];
     }
@@ -32,7 +32,7 @@ export default function TopNav() {
     return [
       { href: "/dashboard", label: "Dashboard" },
       { href: "/dashboard/student/teams", label: "Teams" },
-      { href: "/matches", label: "Matches" },
+      { href: "/dashboard/student/matches", label: "Matches" },
       { href: "/leaderboard", label: "Leaderboard" },
     ];
   }, [user]);

@@ -8,7 +8,7 @@ const {
 } = require("../controllers/matchController");
 const { authMiddleware, requireTeacher } = require("../middleware/auth");
 
-router.post("/", authMiddleware, requireTeacher, createMatch);
+router.post("/", authMiddleware, createMatch);
 router.get("/", authMiddleware, getMatches);
 router.patch("/:id/result", authMiddleware, requireTeacher, updateMatchResult);
 router.delete("/:id", authMiddleware, requireTeacher, deleteMatch);

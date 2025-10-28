@@ -2,6 +2,7 @@ const Match = require("../models/Match");
 const Team = require("../models/Team");
 const School = require("../models/School");
 
+// 🧩 Create match (student or teacher)
 const createMatch = async (req, res) => {
   try {
     const { teamA, teamB, matchType, scheduledAt } = req.body;
@@ -25,6 +26,7 @@ const createMatch = async (req, res) => {
       matchType,
       scheduledAt,
       createdBy: userId,
+      status: "scheduled",
     });
 
     res.status(201).json({ message: "Match created successfully", match });
@@ -34,10 +36,28 @@ const createMatch = async (req, res) => {
   }
 };
 
+// 📋 Get all matches (based on user role)
 const getMatches = async (req, res) => {
   try {
-    const userSchoolId = req.user.school;
-    const matches = await Match.find({ school: userSchoolId })
+    const user = req.user;
+    let filter = {};
+
+    // Teachers/admin: get all matches for their school
+    if (user.role === "teacher" || user.role === "admin") {
+      filter.school = user.school;
+    }
+
+    // Students: show matches related to their team or school
+    if (user.role === "student") {
+      const team = await Team.findOne({ members: user.id });
+      if (team) {
+        filter.$or = [{ teamA: team._id }, { teamB: team._id }];
+      } else {
+        filter.school = user.school;
+      }
+    }
+
+    const matches = await Match.find(filter)
       .populate("teamA", "name")
       .populate("teamB", "name")
       .populate("winner", "name")
@@ -50,6 +70,7 @@ const getMatches = async (req, res) => {
   }
 };
 
+// 🏆 Update match result (teacher only)
 const updateMatchResult = async (req, res) => {
   try {
     const { id } = req.params;
@@ -76,6 +97,7 @@ const updateMatchResult = async (req, res) => {
   }
 };
 
+// ❌ Delete match (teacher only)
 const deleteMatch = async (req, res) => {
   try {
     const { id } = req.params;
